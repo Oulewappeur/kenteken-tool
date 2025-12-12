@@ -1,0 +1,37 @@
+/* print.css */
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Verberg sidebar en knoppen bij print */
+  .print\\:hidden {
+    display: none !important;
+  }
+
+  /* SVG vullen, geen breekfouten */
+  svg {
+    display: block;
+    page-break-inside: avoid;
+  }
+
+  /* Tiling links/rechts */
+  .tiled-left, .tiled-right {
+    width: 100%;
+    height: auto;
+  }
+
+  .tiled-left svg {
+    transform: translateX(0);
+  }
+
+  .tiled-right svg {
+    transform: translateX(-50%);
+  }
+
+  @page {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+}
