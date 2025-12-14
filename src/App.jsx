@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Settings, Printer, AlignCenter, AlignLeft, AlignRight, AlignJustify, Move, Database, Info, AlertTriangle, ArrowRightLeft, CheckCircle2, Scissors, Ruler } from 'lucide-react';
+import { Settings, Printer, AlignCenter, AlignLeft, AlignRight, AlignJustify, Move, Database, Info, AlertTriangle, ArrowRightLeft, CheckCircle2, Scissors, Ruler, Type } from 'lucide-react';
 
 // Standaard afmetingen (basis waarden in inches voor interne logica)
 const PRESETS = {
@@ -74,6 +74,8 @@ export default function App() {
   const [plateWidth, setPlateWidth] = useState(round(PRESETS.US.width * 25.4));
   const [plateHeight, setPlateHeight] = useState(round(PRESETS.US.height * 25.4));
   
+  const [charLimit, setCharLimit] = useState(8); // Nieuwe state voor max karakters
+
   const [alignH, setAlignH] = useState("center");
   const [alignV, setAlignV] = useState("center");
   const [offsetX, setOffsetX] = useState(0);
@@ -84,7 +86,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('settings');
   
   const [useTiling, setUseTiling] = useState(false);
-  const [printSection, setPrintSection] = useState('all'); // 'all', 'left', 'right'
+  const [printSection, setPrintSection] = useState('all');
 
   // Nieuwe state voor print marges (alle 4 zijden)
   const [printMarginTop, setPrintMarginTop] = useState(0);
@@ -107,7 +109,6 @@ export default function App() {
   const toggleUnit = () => {
     const newUnit = unit === 'inch' ? 'mm' : 'inch';
     const factor = newUnit === 'mm' ? INCH_TO_MM : MM_TO_INCH;
-    // Gebruik safeFloat om errors te voorkomen bij lege strings
     setPlateWidth(round(safeFloat(plateWidth) * factor));
     setPlateHeight(round(safeFloat(plateHeight) * factor));
     setOffsetX(round(safeFloat(offsetX) * factor, 3));
@@ -138,10 +139,17 @@ export default function App() {
   const offsetYInInches = unit === 'inch' ? offsetYVal : offsetYVal * MM_TO_INCH;
 
   const calculatePositions = () => {
-    const safeText = text.toUpperCase().slice(0, 8);
+    const limit = typeof charLimit === 'number' ? charLimit : 8; // Fallback als input leeg is
+    const safeText = text.toUpperCase().slice(0, limit); 
     const charCount = safeText.length;
-    if (charCount === 0) return { startX: 0, startY: 0, totalWidth: 0, safeText: "" };
-    const totalTextWidth = (charCount * CHAR_SPECS.width) + ((charCount - 1) * CHAR_SPECS.spacing);
+    if (charCount === 0) return { startX: 0, startY: 0, totalWidth: 0, safeText: "", isTooWide: false };
+    
+    // Bereken totale breedte tekst
+    const totalTextWidth = (charCount * CHAR_SPECS.width) + (Math.max(0, charCount - 1) * CHAR_SPECS.spacing);
+    
+    // Validatie Check: Past het op de plaat?
+    const isTooWide = totalTextWidth > widthInInches;
+
     let startX = 0;
     if (alignH === 'center') startX = (widthInInches - totalTextWidth) / 2;
     if (alignH === 'right') startX = widthInInches - totalTextWidth - 0.5; 
@@ -152,10 +160,10 @@ export default function App() {
     if (alignV === 'bottom') startY = heightInInches - CHAR_SPECS.height - 0.5;
     if (alignV === 'top') startY = 0.5;
     startY += parseFloat(offsetYInInches);
-    return { startX, startY, totalTextWidth, safeText };
+    return { startX, startY, totalTextWidth, safeText, isTooWide };
   };
 
-  const { startX, startY, totalTextWidth, safeText } = calculatePositions();
+  const { startX, startY, totalTextWidth, safeText, isTooWide } = calculatePositions();
 
   const handlePrint = (section = 'all') => {
     setPrintSection(section);
@@ -173,10 +181,7 @@ export default function App() {
   
   const tiledWidthInInches = (widthInInches / 2) + 0.5;
 
-  // Render Logic Component (reusable for tiled/single)
-  // customWidth allows forcing a physical width (in inches) to prevent "100%" stretching
   const RenderContent = ({ viewBox, customWidth }) => {
-    // Bereken de fysieke breedte in mm voor de SVG (CRITICAL: EXPLICIT MM UNITS)
     const physicalWidthInches = customWidth || (useTiling ? tiledWidthInInches : widthInInches);
     const physicalWidthMM = physicalWidthInches * 25.4;
     const physicalHeightMM = canvasHeightInInches * 25.4;
@@ -192,19 +197,19 @@ export default function App() {
       >
         <rect x="0" y="0" width={widthInInches} height={heightInInches} fill="none" stroke="black" strokeWidth="0.02" />
         
-        {/* Middenlijn (stippel) - nu 5mm (approx 0.2 inch) van de rand om buitenmarges te voorkomen */}
+        {/* Visuele Waarschuwing in Preview als tekst te breed is (Niet op print zichtbaar door kleur/laag) */}
+        {isTooWide && (
+             <rect x="0" y="0" width={widthInInches} height={heightInInches} fill="none" stroke="red" strokeWidth="0.1" strokeDasharray="0.2" opacity="0.5" />
+        )}
+
         <line x1={widthInInches/2} y1={0.2} x2={widthInInches/2} y2={heightInInches - 0.2} stroke="#000" strokeWidth="0.01" strokeDasharray="0.2" />
         <line x1={0.2} y1={heightInInches/2} x2={widthInInches - 0.2} y2={heightInInches/2} stroke="#ddd" strokeWidth="0.01" strokeDasharray="0.1" />
 
-        {/* Kalibratie - 10cm met streepjes per 1cm (0.3937 inch) */}
         <g transform={`translate(0.5, ${heightInInches + 0.5})`}>
           <text x="0" y="-0.2" fontSize="0.15" fill="black" fontFamily="sans-serif">Printer Kalibratie (10 cm):</text>
-          {/* Hoofdlijn 100mm = 3.93701 inch */}
           <line x1="0" y1="0" x2="3.93701" y2="0" stroke="black" strokeWidth="0.02" />
-          
-          {/* Genereer streepjes per 10mm (1cm) */}
           {[...Array(11)].map((_, i) => {
-              const xPos = i * 0.393701; // 10mm in inches
+              const xPos = i * 0.393701;
               const isMain = i === 0 || i === 5 || i === 10;
               return (
                   <line 
@@ -218,11 +223,9 @@ export default function App() {
                   />
               );
           })}
-          
           <text x="3.93701" y="0.3" fontSize="0.12" textAnchor="middle">10 cm</text>
         </g>
 
-        {/* Karakters */}
         {safeText.split('').map((char, index) => {
           const charX = startX + (index * (CHAR_SPECS.width + CHAR_SPECS.spacing));
           const charY = startY;
@@ -270,14 +273,12 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-100 p-4 font-sans text-gray-800">
       
-      {/* Header */}
       <div className="max-w-6xl mx-auto mb-6 flex justify-between items-center print:hidden">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Kenteken Boorsjabloon</h1>
           <p className="text-sm text-gray-500">Genereer 1:1 sjablonen voor montagegaten</p>
         </div>
         <div className="flex gap-4 items-center">
-            {/* Tiling Toggle */}
             <label className="flex items-center gap-2 cursor-pointer bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-sm hover:bg-gray-50">
                 <input 
                     type="checkbox" 
@@ -321,7 +322,6 @@ export default function App() {
       </div>
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 print:block print:w-full print:max-w-none">
-        {/* Sidebar Controls (Hidden on print) */}
         <div className="lg:col-span-1 space-y-4 print:hidden">
           <div className="flex rounded-lg bg-white shadow-sm p-1">
             <button onClick={() => setActiveTab('settings')} className={`flex-1 py-2 text-sm font-medium rounded-md flex justify-center items-center gap-2 ${activeTab === 'settings' ? 'bg-blue-50 text-blue-700' : 'text-gray-500 hover:text-gray-700'}`}>
@@ -384,10 +384,44 @@ export default function App() {
                 )}
               </div>
               <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                <label className="block font-semibold mb-2">Kenteken Tekst</label>
-                <input type="text" value={text} maxLength={8} onChange={(e) => setText(e.target.value)} className="w-full border-2 border-blue-200 rounded-lg p-3 text-xl font-mono uppercase tracking-widest focus:border-blue-500 outline-none" placeholder="KENTEKEN" />
-                <div className="text-right text-xs text-gray-400 mt-1">{text.length}/8 tekens</div>
+                <div className="flex justify-between items-center mb-2">
+                    <label className="block font-semibold">Kenteken Tekst</label>
+                    {isTooWide && (
+                        <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded font-bold flex items-center gap-1">
+                            <AlertTriangle size={12} /> Te Breed!
+                        </span>
+                    )}
+                </div>
+                
+                {/* Dynamische Input voor Aantal Karakters */}
+                <div className="mb-3 flex items-center gap-2">
+                    <span className="text-xs text-gray-500 flex items-center gap-1"><Type size={12}/> Aantal Karakters:</span>
+                    <input 
+                        type="number" 
+                        min="1" max="20" 
+                        value={charLimit} 
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setCharLimit(val === '' ? '' : parseInt(val));
+                        }}
+                        className="w-16 border rounded p-1 text-xs text-center"
+                    />
+                </div>
+
+                <input 
+                    type="text" 
+                    value={text} 
+                    maxLength={typeof charLimit === 'number' ? charLimit : 20} 
+                    onChange={(e) => setText(e.target.value)} 
+                    className={`w-full border-2 rounded-lg p-3 text-xl font-mono uppercase tracking-widest outline-none transition-colors ${isTooWide ? 'border-red-400 bg-red-50' : 'border-blue-200 focus:border-blue-500'}`} 
+                    placeholder="KENTEKEN" 
+                />
+                <div className="flex justify-between mt-1 text-xs text-gray-400">
+                    <span>{text.length}/{typeof charLimit === 'number' ? charLimit : '-'} tekens</span>
+                    {isTooWide && <span className="text-red-500 font-bold">Tekst past niet op de plaat!</span>}
+                </div>
               </div>
+
               <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
                 <h3 className="font-semibold mb-3 flex items-center gap-2"><AlignJustify size={18} /> Positie & Uitlijning</h3>
                 <div className="mb-4">
@@ -418,7 +452,6 @@ export default function App() {
                 </div>
               </div>
 
-               {/* Nieuw blok voor Printer Marges (Alle 4 zijden) */}
                <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
                 <h3 className="font-semibold mb-3 flex items-center gap-2"><Ruler size={18} /> Printer Marges & Correctie</h3>
                 <p className="text-xs text-gray-500 mb-3">Verschuif de print op het papier door marges in te stellen (mm).</p>
@@ -477,7 +510,6 @@ export default function App() {
           )}
         </div>
 
-        {/* Preview Area (Hier zit de Print ID) */}
         <div className="lg:col-span-2 bg-white rounded-xl shadow-lg border border-gray-200 p-8 flex flex-col items-center justify-center overflow-hidden">
           <div className="print:hidden mb-4 text-center">
              <span className="text-sm font-medium text-gray-400 uppercase tracking-widest">Live Preview</span>
@@ -495,11 +527,15 @@ export default function App() {
              </div>
           </div>
 
-          {/* SVG Canvas met ID voor Print Targeting */}
+          {isTooWide && (
+             <div className="mb-4 p-3 bg-red-50 text-red-900 text-xs rounded-md print:hidden border border-red-200 w-full max-w-lg text-center font-bold">
+                 LET OP: De tekst is te breed voor de gekozen plaat!
+             </div>
+          )}
+
           <div id="print-mount" ref={printRef} className="border-2 border-dashed border-gray-300 bg-white relative">
             {useTiling ? (
                 <>
-                    {/* Page 1: Left Half + Overlap - Render alleen als we 'all' of 'left' printen */}
                     {(printSection === 'all' || printSection === 'left') && (
                         <div 
                             className="print-page mb-8 border-b-2 border-blue-100 pb-4 print:border-none print:mb-0 print:pb-0"
@@ -516,7 +552,6 @@ export default function App() {
                         </div>
                     )}
                     
-                    {/* Page 2: Right Half + Overlap - Render alleen als we 'all' of 'right' printen */}
                     {(printSection === 'all' || printSection === 'right') && (
                         <div className="print-page">
                             <div className="text-xs text-blue-500 font-bold mb-2 print:hidden text-center">Pagina 2 (Rechts)</div>
@@ -537,7 +572,6 @@ export default function App() {
 
       <style>{`
         @media print {
-          /* RESET ALLES VOOR PRINT */
           body, html {
             margin: 0 !important;
             padding: 0 !important;
@@ -552,14 +586,12 @@ export default function App() {
           svg {
             margin: 0 !important;
             padding: 0 !important;
-            /* Forceer auto width zodat het attribute (mm) leidend is */
             width: auto !important;  
             height: auto !important; 
             max-width: none !important;
           }
 
           * {
-            /* BELANGRIJK: We verwijderen transform: none !important; omdat dit SVG coördinaten wist */
             zoom: 1 !important;
             box-shadow: none !important;
             text-shadow: none !important;
@@ -567,16 +599,13 @@ export default function App() {
           }
 
           @page {
-            /* Gebruik de dynamische marges hier - Dwingt de browser om witruimte te respecteren */
             margin: ${printMarginTop}mm ${printMarginRight}mm ${printMarginBottom}mm ${printMarginLeft}mm !important; 
           }
 
-          /* Hide everything */
           body * {
             visibility: hidden;
           }
           
-          /* Show mount */
           #print-mount, #print-mount * {
             visibility: visible;
           }
@@ -585,7 +614,7 @@ export default function App() {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100% !important; /* Teruggezet naar 100% voor correcte blok-flow */
+            width: 100% !important; 
             height: auto !important;
             margin: 0;
             padding: 0;
@@ -595,7 +624,7 @@ export default function App() {
           .print-page {
             position: relative;
             width: 100%;
-            height: auto; /* Aangepast van 100% naar auto om uitrekken te voorkomen */
+            height: auto; 
             overflow: visible; 
             display: block;   
           }
