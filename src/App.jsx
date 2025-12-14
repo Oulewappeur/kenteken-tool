@@ -381,17 +381,6 @@ export default function App() {
                     />
                   </div>
                 </div>
-                 {/* Nieuw invoerveld voor Spacing */}
-                 <div className="mt-4">
-                    <label className="block text-xs font-medium text-gray-500 mb-1 flex items-center gap-1"><ArrowLeftRight size={12}/> Tussenruimte ({unit})</label>
-                    <input 
-                      type="number" 
-                      step={unit === 'mm' ? "0.1" : "0.01"} 
-                      value={spacing} 
-                      onChange={(e) => setSpacing(safeFloat(e.target.value))} 
-                      className="w-full border rounded p-2 text-sm" 
-                    />
-                </div>
 
                 {(isTooWideForA4 || isTooTallForA4) && (
                   <div className="mt-4 p-3 bg-yellow-50 text-yellow-800 rounded text-xs flex gap-2 items-start">
@@ -410,19 +399,31 @@ export default function App() {
                     )}
                 </div>
                 
-                {/* Dynamische Input voor Aantal Karakters */}
-                <div className="mb-3 flex items-center gap-2">
-                    <span className="text-xs text-gray-500 flex items-center gap-1"><Type size={12}/> Aantal Karakters:</span>
-                    <input 
-                        type="number" 
-                        min="1" max="20" 
-                        value={charLimit} 
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setCharLimit(val === '' ? '' : parseInt(val));
-                        }}
-                        className="w-16 border rounded p-1 text-xs text-center"
-                    />
+                {/* Dynamische Input voor Aantal Karakters & Spacing */}
+                <div className="grid grid-cols-2 gap-4 mb-3">
+                    <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1 flex items-center gap-1"><Type size={12}/> Aantal Karakters</label>
+                        <input 
+                            type="number" 
+                            min="1" max="20" 
+                            value={charLimit} 
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setCharLimit(val === '' ? '' : parseInt(val));
+                            }}
+                            className="w-full border rounded p-2 text-sm"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1 flex items-center gap-1"><ArrowLeftRight size={12}/> Tussenruimte ({unit})</label>
+                        <input 
+                          type="number" 
+                          step={unit === 'mm' ? "0.1" : "0.01"} 
+                          value={spacing} 
+                          onChange={(e) => setSpacing(safeFloat(e.target.value))} 
+                          className="w-full border rounded p-2 text-sm" 
+                        />
+                    </div>
                 </div>
 
                 <input 
