@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Settings, Printer, AlignCenter, AlignLeft, AlignRight, AlignJustify, Move, Database, Info, AlertTriangle, ArrowRightLeft, CheckCircle2, Scissors, Ruler, Type, ArrowLeftRight } from 'lucide-react';
+import { Settings, Printer, AlignCenter, AlignLeft, AlignRight, AlignJustify, Move, Database, Info, AlertTriangle, ArrowRightLeft, CheckCircle2, Scissors, Ruler, Type, ArrowLeftRight, ZoomIn, Maximize } from 'lucide-react';
 
 // Standaard afmetingen (basis waarden in inches voor interne logica)
 const PRESETS = {
@@ -93,6 +93,8 @@ export default function App() {
   const [printMarginLeft, setPrintMarginLeft] = useState(0);
   const [printMarginRight, setPrintMarginRight] = useState(0);
   const [printMarginBottom, setPrintMarginBottom] = useState(0);
+
+  const [previewMode, setPreviewMode] = useState('fit'); // 'fit' of 'actual'
 
   const printRef = useRef(null);
 
@@ -195,7 +197,7 @@ export default function App() {
         height={`${physicalHeightMM}mm`} 
         viewBox={viewBox} 
         xmlns="http://www.w3.org/2000/svg"
-        className="shadow-sm"
+        className={`shadow-sm ${previewMode === 'fit' ? 'w-full h-auto' : ''}`}
         style={{ display: 'block', overflow: 'visible' }}
       >
         <rect x="0" y="0" width={widthInInches} height={heightInInches} fill="none" stroke="black" strokeWidth="0.02" />
@@ -525,9 +527,23 @@ export default function App() {
           )}
         </div>
 
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-lg border border-gray-200 p-8 flex flex-col items-center justify-center overflow-hidden">
-          <div className="print:hidden mb-4 text-center">
-             <span className="text-sm font-medium text-gray-400 uppercase tracking-widest">Live Preview</span>
+        <div className="lg:col-span-2 bg-white rounded-xl shadow-lg border border-gray-200 p-8 flex flex-col items-center justify-center overflow-auto min-h-[500px]">
+          <div className="print:hidden mb-4 flex flex-col items-center">
+             <span className="text-sm font-medium text-gray-400 uppercase tracking-widest mb-2">Live Preview</span>
+             <div className="flex bg-gray-100 p-1 rounded-lg">
+                <button 
+                  onClick={() => setPreviewMode('fit')}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${previewMode === 'fit' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                >
+                  <Maximize size={14} /> Passend
+                </button>
+                <button 
+                  onClick={() => setPreviewMode('actual')}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${previewMode === 'actual' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                >
+                  <ZoomIn size={14} /> Ware Grootte
+                </button>
+             </div>
           </div>
 
           <div className="mb-4 p-3 bg-blue-50 text-blue-900 text-xs rounded-md print:hidden flex items-start gap-2 max-w-lg mx-auto border border-blue-100">
