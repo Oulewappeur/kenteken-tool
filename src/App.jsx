@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Settings, Printer, AlignCenter, AlignLeft, AlignRight, AlignJustify, Move, Database, Info, AlertTriangle, ArrowRightLeft, CheckCircle2, Scissors, Ruler, Type } from 'lucide-react';
+import { Settings, Printer, AlignCenter, AlignLeft, AlignRight, AlignJustify, Move, Database, Info, AlertTriangle, ArrowRightLeft, CheckCircle2, Scissors, Ruler, Type, ArrowLeftRight } from 'lucide-react';
 
 // Standaard afmetingen (basis waarden in inches voor interne logica)
 const PRESETS = {
@@ -10,7 +10,7 @@ const PRESETS = {
 const CHAR_SPECS = {
   width: 1,         // 1 inch breed (25.4mm)
   height: 2.5625,   // 2.5625 inch hoog (65.0875mm)
-  spacing: 0.375    // 0.375 inch tussenruimte
+  // Spacing is nu dynamisch, default was 0.375
 };
 
 // Conversie helpers
@@ -74,7 +74,8 @@ export default function App() {
   const [plateWidth, setPlateWidth] = useState(round(PRESETS.US.width * 25.4));
   const [plateHeight, setPlateHeight] = useState(round(PRESETS.US.height * 25.4));
   
-  const [charLimit, setCharLimit] = useState(8); // Nieuwe state voor max karakters
+  const [charLimit, setCharLimit] = useState(8); 
+  const [spacing, setSpacing] = useState(round(0.375 * 25.4)); // Default spacing 9.525mm
 
   const [alignH, setAlignH] = useState("center");
   const [alignV, setAlignV] = useState("center");
@@ -88,7 +89,6 @@ export default function App() {
   const [useTiling, setUseTiling] = useState(false);
   const [printSection, setPrintSection] = useState('all');
 
-  // Nieuwe state voor print marges (alle 4 zijden)
   const [printMarginTop, setPrintMarginTop] = useState(0);
   const [printMarginLeft, setPrintMarginLeft] = useState(0);
   const [printMarginRight, setPrintMarginRight] = useState(0);
@@ -113,6 +113,7 @@ export default function App() {
     setPlateHeight(round(safeFloat(plateHeight) * factor));
     setOffsetX(round(safeFloat(offsetX) * factor, 3));
     setOffsetY(round(safeFloat(offsetY) * factor, 3));
+    setSpacing(round(safeFloat(spacing) * factor, 3)); // Update spacing unit
     setUnit(newUnit);
   };
 
@@ -137,17 +138,19 @@ export default function App() {
   const offsetYVal = safeFloat(offsetY);
   const offsetXInInches = unit === 'inch' ? offsetXVal : offsetXVal * MM_TO_INCH;
   const offsetYInInches = unit === 'inch' ? offsetYVal : offsetYVal * MM_TO_INCH;
+  
+  const spacingVal = safeFloat(spacing);
+  const spacingInInches = unit === 'inch' ? spacingVal : spacingVal * MM_TO_INCH;
 
   const calculatePositions = () => {
-    const limit = typeof charLimit === 'number' ? charLimit : 8; // Fallback als input leeg is
+    const limit = typeof charLimit === 'number' ? charLimit : 8; 
     const safeText = text.toUpperCase().slice(0, limit); 
     const charCount = safeText.length;
     if (charCount === 0) return { startX: 0, startY: 0, totalWidth: 0, safeText: "", isTooWide: false };
     
-    // Bereken totale breedte tekst
-    const totalTextWidth = (charCount * CHAR_SPECS.width) + (Math.max(0, charCount - 1) * CHAR_SPECS.spacing);
+    // Bereken totale breedte tekst met dynamische spacing
+    const totalTextWidth = (charCount * CHAR_SPECS.width) + (Math.max(0, charCount - 1) * spacingInInches);
     
-    // Validatie Check: Past het op de plaat?
     const isTooWide = totalTextWidth > widthInInches;
 
     let startX = 0;
@@ -197,7 +200,6 @@ export default function App() {
       >
         <rect x="0" y="0" width={widthInInches} height={heightInInches} fill="none" stroke="black" strokeWidth="0.02" />
         
-        {/* Visuele Waarschuwing in Preview als tekst te breed is (Niet op print zichtbaar door kleur/laag) */}
         {isTooWide && (
              <rect x="0" y="0" width={widthInInches} height={heightInInches} fill="none" stroke="red" strokeWidth="0.1" strokeDasharray="0.2" opacity="0.5" />
         )}
@@ -227,7 +229,8 @@ export default function App() {
         </g>
 
         {safeText.split('').map((char, index) => {
-          const charX = startX + (index * (CHAR_SPECS.width + CHAR_SPECS.spacing));
+          // Gebruik dynamische spacingInInches
+          const charX = startX + (index * (CHAR_SPECS.width + spacingInInches));
           const charY = startY;
           const charData = parsedHoleData[char];
           let holes = [];
@@ -376,6 +379,18 @@ export default function App() {
                     />
                   </div>
                 </div>
+                 {/* Nieuw invoerveld voor Spacing */}
+                 <div className="mt-4">
+                    <label className="block text-xs font-medium text-gray-500 mb-1 flex items-center gap-1"><ArrowLeftRight size={12}/> Tussenruimte ({unit})</label>
+                    <input 
+                      type="number" 
+                      step={unit === 'mm' ? "0.1" : "0.01"} 
+                      value={spacing} 
+                      onChange={(e) => setSpacing(safeFloat(e.target.value))} 
+                      className="w-full border rounded p-2 text-sm" 
+                    />
+                </div>
+
                 {(isTooWideForA4 || isTooTallForA4) && (
                   <div className="mt-4 p-3 bg-yellow-50 text-yellow-800 rounded text-xs flex gap-2 items-start">
                     <AlertTriangle size={16} className="shrink-0 mt-0.5" />
