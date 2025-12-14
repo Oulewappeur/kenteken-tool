@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Settings, Printer, AlignCenter, AlignLeft, AlignRight, AlignJustify, Move, Database, Info, AlertTriangle, ArrowRightLeft, CheckCircle2, Scissors, Ruler, Type, ArrowLeftRight, ZoomIn, Maximize } from 'lucide-react';
+import { Settings, Printer, AlignCenter, AlignLeft, AlignRight, AlignJustify, Move, Database, Info, AlertTriangle, ArrowRightLeft, CheckCircle2, Scissors, Ruler, Type, ArrowLeftRight, ZoomIn, Maximize, Image as ImageIcon, Trash2 } from 'lucide-react';
 
 // Standaard afmetingen (basis waarden in inches voor interne logica)
 const PRESETS = {
@@ -76,6 +76,8 @@ export default function App() {
   
   const [charLimit, setCharLimit] = useState(8); 
   const [spacing, setSpacing] = useState(round(0.375 * 25.4)); // Default spacing 9.525mm
+  // PRO TIP: Verander 'logo.png' hieronder in 'logo.jpg' als je een JPEG bestand hebt!
+  const [logo, setLogo] = useState('logo.png'); 
 
   const [alignH, setAlignH] = useState("center");
   const [alignV, setAlignV] = useState("center");
@@ -94,7 +96,7 @@ export default function App() {
   const [printMarginRight, setPrintMarginRight] = useState(0);
   const [printMarginBottom, setPrintMarginBottom] = useState(0);
 
-  const [previewMode, setPreviewMode] = useState('fit'); // 'fit' of 'actual'
+  const [previewMode, setPreviewMode] = useState('fit');
 
   const printRef = useRef(null);
 
@@ -128,6 +130,14 @@ export default function App() {
     } else {
       setPlateWidth(round(preset.width * INCH_TO_MM));
       setPlateHeight(round(preset.height * INCH_TO_MM));
+    }
+  };
+
+  const handleLogoUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setLogo(url);
     }
   };
 
@@ -279,10 +289,21 @@ export default function App() {
     <div className="min-h-screen bg-gray-100 p-4 font-sans text-gray-800">
       
       <div className="max-w-6xl mx-auto mb-6 flex justify-between items-center print:hidden">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Kenteken Boorsjabloon</h1>
-          <p className="text-sm text-gray-500">Genereer 1:1 sjablonen voor montagegaten</p>
+        <div className="flex items-center gap-4">
+             {logo && (
+                 <img 
+                    src={logo} 
+                    alt="Logo" 
+                    className="h-16 w-auto object-contain" 
+                    onError={(e) => { e.target.style.display = 'none'; }} 
+                 />
+             )}
+             <div>
+                <h1 className="text-2xl font-bold text-gray-900">Kenteken Boorsjabloon</h1>
+                <p className="text-sm text-gray-500">Genereer 1:1 sjablonen voor montagegaten</p>
+             </div>
         </div>
+        
         <div className="flex gap-4 items-center">
             <label className="flex items-center gap-2 cursor-pointer bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-sm hover:bg-gray-50">
                 <input 
@@ -438,6 +459,27 @@ export default function App() {
                     <span>{text.length}/{typeof charLimit === 'number' ? charLimit : '-'} tekens</span>
                     {isTooWide && <span className="text-red-500 font-bold">Tekst past niet op de plaat!</span>}
                 </div>
+              </div>
+
+               {/* Logo Upload Sectie */}
+               <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="font-semibold flex items-center gap-2"><ImageIcon size={18} /> Tool Logo</h3>
+                    {logo && (
+                        <button onClick={() => setLogo(null)} className="text-xs text-red-500 hover:text-red-700 flex items-center gap-1">
+                            <Trash2 size={12} /> Verwijder
+                        </button>
+                    )}
+                  </div>
+                  <div className="mt-2">
+                    <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleLogoUpload} 
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
+                    />
+                    <p className="text-xs text-gray-400 mt-2">Dit logo wordt in de header van de website getoond (niet op de print).</p>
+                  </div>
               </div>
 
               <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
