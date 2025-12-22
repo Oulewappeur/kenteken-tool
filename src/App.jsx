@@ -26,45 +26,341 @@ const safeFloat = (val) => {
   return isNaN(num) ? 0 : num;
 };
 
-// Volledige dataset van de gebruiker (Fusion360 export in mm)
+// Volledige dataset van de gebruiker (Nieuwe update met 2 pinnen per karakter)
 const INITIAL_HOLE_DATA = {
-  "0": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -12.902, "y": -4.913, "diameter": 4.5 }, { "x": -3.553, "y": -34.178, "diameter": 4.5 }, { "x": -12.783, "y": -59.753, "diameter": 4.5 }, { "x": -22.014, "y": -34.022, "diameter": 4.5 } ] },
-  "1": { "width": 25.4, "height": 65.0875, "pinCount": 2, "pins": [ { "x": -13.572, "y": -58.53, "diameter": 4.5 }, { "x": -15.402, "y": -5.371, "diameter": 4.5 } ] },
-  "2": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -3.979, "y": -5.595, "diameter": 4.5 }, { "x": -21.329, "y": -5.595, "diameter": 4.5 }, { "x": -9.147, "y": -29.494, "diameter": 4.5 }, { "x": -12.747, "y": -59.597, "diameter": 4.5 } ] },
-  "3": { "width": 25.4, "height": 65.0875, "pinCount": 3, "pins": [ { "x": -12.986, "y": -5.324, "diameter": 4.5 }, { "x": -12.931, "y": -59.938, "diameter": 4.5 }, { "x": -16.999, "y": -34.432, "diameter": 4.5 } ] },
-  "4": { "width": 25.4, "height": 65.0875, "pinCount": 3, "pins": [ { "x": -19.365, "y": -5.414, "diameter": 4.5 }, { "x": -3.5, "y": -16.949, "diameter": 4.5 }, { "x": -17.608, "y": -59.761, "diameter": 4.5 } ] },
-  "5": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -4.055, "y": -11.17, "diameter": 4.5 }, { "x": -22.183, "y": -21.985, "diameter": 4.5 }, { "x": -4.017, "y": -59.693, "diameter": 4.5 }, { "x": -21.379, "y": -60.371, "diameter": 4.5 } ] },
-  "6": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -3.629, "y": -19.398, "diameter": 4.5 }, { "x": -22.075, "y": -18.715, "diameter": 4.5 }, { "x": -21.487, "y": -53.637, "diameter": 4.5 }, { "x": -3.505, "y": -44.839, "diameter": 4.5 } ] },
-  "7": { "width": 25.4, "height": 65.0875, "pinCount": 3, "pins": [ { "x": -9.639, "y": -5.43, "diameter": 4.5 }, { "x": -3.5, "y": -60.587, "diameter": 4.5 }, { "x": -21.31, "y": -59.587, "diameter": 4.5 } ] },
-  "8": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -3.365, "y": -19.749, "diameter": 4.5 }, { "x": -22.089, "y": -19.69, "diameter": 4.5 }, { "x": -22.089, "y": -48.056, "diameter": 4.5 }, { "x": -3.365, "y": -48.114, "diameter": 4.5 } ] },
-  "9": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -3.894, "y": -11.516, "diameter": 4.5 }, { "x": -21.876, "y": -20.899, "diameter": 4.5 }, { "x": -21.753, "y": -47.022, "diameter": 4.5 }, { "x": -3.306, "y": -47.022, "diameter": 4.5 } ] },
-  "A": { "width": 25.4, "height": 65.0875, "pinCount": 3, "pins": [ { "x": -4.467, "y": -6.354, "diameter": 4.5 }, { "x": -21.616, "y": -6.354, "diameter": 4.5 }, { "x": -12.473, "y": -58.788, "diameter": 4.5 } ] },
-  "B": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -5.001, "y": -6.56, "diameter": 4.5 }, { "x": -21.413, "y": -18.101, "diameter": 4.5 }, { "x": -5.035, "y": -58.788, "diameter": 4.5 }, { "x": -21.424, "y": -44.44, "diameter": 4.5 } ] },
-  "C": { "width": 25.4, "height": 65.0875, "pinCount": 3, "pins": [ { "x": -21.366, "y": -54.421, "diameter": 4.5 }, { "x": -21.458, "y": -11.238, "diameter": 4.5 }, { "x": -3.626, "y": -32.83, "diameter": 4.5 } ] },
-  "D": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -5, "y": -58.646, "diameter": 4.5 }, { "x": -5, "y": -6.31, "diameter": 4.5 }, { "x": -21.202, "y": -54.192, "diameter": 4.5 }, { "x": -21.202, "y": -10.803, "diameter": 4.5 } ] },
-  "E": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -3.59, "y": -5.361, "diameter": 4.5 }, { "x": -22.282, "y": -5.361, "diameter": 4.5 }, { "x": -3.59, "y": -60, "diameter": 4.5 }, { "x": -22.431, "y": -59.967, "diameter": 4.5 } ] },
-  "F": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -3.646, "y": -6.443, "diameter": 4.5 }, { "x": -10.4, "y": -33.727, "diameter": 4.5 }, { "x": -3.646, "y": -59.967, "diameter": 4.5 }, { "x": -21.431, "y": -59.967, "diameter": 4.5 } ] },
-  "G": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -12.108, "y": -5.098, "diameter": 4.5 }, { "x": -17.07, "y": -27.514, "diameter": 4.5 }, { "x": -3.193, "y": -33.28, "diameter": 4.5 }, { "x": -12.07, "y": -60.259, "diameter": 4.5 } ] },
-  "H": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -21.199, "y": -59.463, "diameter": 4.5 }, { "x": -3.961, "y": -59.475, "diameter": 4.5 }, { "x": -21.19, "y": -5.396, "diameter": 4.5 }, { "x": -3.961, "y": -5.385, "diameter": 4.5 } ] },
-  "I": { "width": 25.4, "height": 65.0875, "pinCount": 2, "pins": [ { "x": -12.654, "y": -5.465, "diameter": 4.5 }, { "x": -12.468, "y": -59.223, "diameter": 4.5 } ] },
-  "J": { "width": 25.4, "height": 65.0875, "pinCount": 3, "pins": [ { "x": -3.991, "y": -11.517, "diameter": 4.5 }, { "x": -21.901, "y": -59.463, "diameter": 4.5 }, { "x": -21.781, "y": -12.517, "diameter": 4.5 } ] },
-  "K": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -3.574, "y": -5.396, "diameter": 4.5 }, { "x": -20.612, "y": -5.396, "diameter": 4.5 }, { "x": -18.546, "y": -59.424, "diameter": 4.5 }, { "x": -3.501, "y": -59.424, "diameter": 4.5 } ] },
-  "L": { "width": 25.4, "height": 65.0875, "pinCount": 3, "pins": [ { "x": -3.572, "y": -5.517, "diameter": 4.5 }, { "x": -21.375, "y": -5.56, "diameter": 4.5 }, { "x": -3.572, "y": -59.593, "diameter": 4.5 } ] },
-  "M": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -3.579, "y": -59.489, "diameter": 4.5 }, { "x": -21.836, "y": -59.489, "diameter": 4.5 }, { "x": -21.893, "y": -5.498, "diameter": 4.5 }, { "x": -3.182, "y": -5.398, "diameter": 4.5 } ] },
-  "N": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -3.685, "y": -5.404, "diameter": 4.5 }, { "x": -21.922, "y": -59.749, "diameter": 4.5 }, { "x": -21.922, "y": -5.404, "diameter": 4.5 }, { "x": -3.685, "y": -59.749, "diameter": 4.5 } ] },
-  "O": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -3.345, "y": -32.732, "diameter": 4.5 }, { "x": -12.813, "y": -5.03, "diameter": 4.5 }, { "x": -21.903, "y": -32.732, "diameter": 4.5 }, { "x": -12.851, "y": -60.24, "diameter": 4.5 } ] },
-  "P": { "width": 25.4, "height": 65.0875, "pinCount": 3, "pins": [ { "x": -4.515, "y": -59.084, "diameter": 4.5 }, { "x": -3.515, "y": -5.404, "diameter": 4.5 }, { "x": -21.865, "y": -46.808, "diameter": 4.5 } ] },
-  "Q": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -12.851, "y": -5.049, "diameter": 4.5 }, { "x": -3.458, "y": -32.752, "diameter": 4.5 }, { "x": -21.903, "y": -32.732, "diameter": 4.5 }, { "x": -12.851, "y": -60.26, "diameter": 4.5 } ] },
-  "R": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -3.366, "y": -4.404, "diameter": 4.5 }, { "x": -21.718, "y": -4.404, "diameter": 4.5 }, { "x": -21.766, "y": -46.33, "diameter": 4.5 }, { "x": -3.366, "y": -60.284, "diameter": 4.5 } ] },
-  "S": { "width": 25.4, "height": 65.0875, "pinCount": 3, "pins": [ { "x": -12.909, "y": -33.96, "diameter": 4.5 }, { "x": -12.889, "y": -4.854, "diameter": 4.5 }, { "x": -12.926, "y": -60.216, "diameter": 4.5 } ] },
-  "-": { "width": 25.4, "height": 65.0875, "pinCount": 2, "pins": [ { "x": -9.932, "y": -33.134, "diameter": 4.5 }, { "x": -16.677, "y": -33.193, "diameter": 4.5 } ] },
-  "T": { "width": 25.4, "height": 65.0875, "pinCount": 3, "pins": [ { "x": -12.817, "y": -5.404, "diameter": 4.5 }, { "x": -21.452, "y": -59.519, "diameter": 4.5 }, { "x": -4.018, "y": -59.617, "diameter": 4.5 } ] },
-  "U": { "width": 25.4, "height": 65.0875, "pinCount": 3, "pins": [ { "x": -12.889, "y": -4.854, "diameter": 4.5 }, { "x": -3.534, "y": -60.749, "diameter": 4.5 }, { "x": -21.922, "y": -60.749, "diameter": 4.5 } ] },
-  "V": { "width": 25.4, "height": 65.0875, "pinCount": 3, "pins": [ { "x": -12.758, "y": -8.25, "diameter": 4.5 }, { "x": -3.867, "y": -59.749, "diameter": 4.5 }, { "x": -21.368, "y": -59.749, "diameter": 4.5 } ] },
-  "W": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -6.445, "y": -5.404, "diameter": 4.5 }, { "x": -19.478, "y": -5.404, "diameter": 4.5 }, { "x": -21.944, "y": -59.632, "diameter": 4.5 }, { "x": -3.258, "y": -59.632, "diameter": 4.5 } ] },
-  "X": { "width": 25.4, "height": 65.0875, "pinCount": 4, "pins": [ { "x": -3.974, "y": -4.945, "diameter": 4.5 }, { "x": -21.308, "y": -4.924, "diameter": 4.5 }, { "x": -21.539, "y": -60.132, "diameter": 4.5 }, { "x": -3.748, "y": -60.132, "diameter": 4.5 } ] },
-  "Y": { "width": 25.4, "height": 65.0875, "pinCount": 3, "pins": [ { "x": -12.662, "y": -5.306, "diameter": 4.5 }, { "x": -22.112, "y": -60.132, "diameter": 4.5 }, { "x": -3.483, "y": -60.132, "diameter": 4.5 } ] },
-  "Z": { "width": 25.4, "height": 65.0875, "pinCount": 3, "pins": [ { "x": -12.657, "y": -5.702, "diameter": 4.5 }, { "x": -12.709, "y": -32.502, "diameter": 4.5 }, { "x": -12.747, "y": -59.636, "diameter": 4.5 } ] }
+  "0": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -3.553, "y": -34.178, "diameter": 4.5 },
+      { "x": -22.014, "y": -34.022, "diameter": 4.5 }
+    ]
+  },
+  "1": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -13.572, "y": -58.53, "diameter": 4.5 },
+      { "x": -15.402, "y": -5.371, "diameter": 4.5 }
+    ]
+  },
+  "2": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.665, "y": -5.595, "diameter": 4.5 },
+      { "x": -12.747, "y": -59.597, "diameter": 4.5 }
+    ]
+  },
+  "3": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.986, "y": -5.324, "diameter": 4.5 },
+      { "x": -12.931, "y": -59.938, "diameter": 4.5 }
+    ]
+  },
+  "4": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -19.365, "y": -5.414, "diameter": 4.5 },
+      { "x": -15.978, "y": -52.929, "diameter": 4.5 }
+    ]
+  },
+  "5": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -13.159, "y": -5.232, "diameter": 4.5 },
+      { "x": -12.689, "y": -60.371, "diameter": 4.5 }
+    ]
+  },
+  "6": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -13.014, "y": -4.993, "diameter": 4.5 },
+      { "x": -12.577, "y": -60.24, "diameter": 4.5 }
+    ]
+  },
+  "7": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -9.639, "y": -5.43, "diameter": 4.5 },
+      { "x": -12.699, "y": -60.464, "diameter": 4.5 }
+    ]
+  },
+  "8": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -13.046, "y": -4.737, "diameter": 4.5 },
+      { "x": -13.046, "y": -60.123, "diameter": 4.5 }
+    ]
+  },
+  "9": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.881, "y": -4.921, "diameter": 4.5 },
+      { "x": -12.368, "y": -60.16, "diameter": 4.5 }
+    ]
+  },
+  "A": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.568, "y": -14.902, "diameter": 4.5 },
+      { "x": -12.473, "y": -55.788, "diameter": 4.5 }
+    ]
+  },
+  "B": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -10.853, "y": -59.733, "diameter": 4.5 },
+      { "x": -10.853, "y": -5.42, "diameter": 4.5 }
+    ]
+  },
+  "C": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.876, "y": -5.342, "diameter": 4.5 },
+      { "x": -12.876, "y": -59.733, "diameter": 4.5 }
+    ]
+  },
+  "D": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -11.787, "y": -59.655, "diameter": 4.5 },
+      { "x": -11.633, "y": -5.342, "diameter": 4.5 }
+    ]
+  },
+  "E": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.641, "y": -5.361, "diameter": 4.5 },
+      { "x": -12.716, "y": -59.967, "diameter": 4.5 }
+    ]
+  },
+  "F": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -3.646, "y": -6.443, "diameter": 4.5 },
+      { "x": -12.539, "y": -59.967, "diameter": 4.5 }
+    ]
+  },
+  "G": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.108, "y": -5.098, "diameter": 4.5 },
+      { "x": -12.07, "y": -60.259, "diameter": 4.5 }
+    ]
+  },
+  "H": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -21.195, "y": -33.477, "diameter": 4.5 },
+      { "x": -4.008, "y": -33.477, "diameter": 4.5 }
+    ]
+  },
+  "I": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.654, "y": -5.465, "diameter": 4.5 },
+      { "x": -12.468, "y": -59.223, "diameter": 4.5 }
+    ]
+  },
+  "J": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -13.216, "y": -5.198, "diameter": 4.5 },
+      { "x": -21.901, "y": -59.463, "diameter": 4.5 }
+    ]
+  },
+  "K": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -20.612, "y": -5.396, "diameter": 4.5 },
+      { "x": -3.501, "y": -59.424, "diameter": 4.5 }
+    ]
+  },
+  "L": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.678, "y": -5.59, "diameter": 4.5 },
+      { "x": -3.572, "y": -59.593, "diameter": 4.5 }
+    ]
+  },
+  "M": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -21.893, "y": -32.308, "diameter": 4.5 },
+      { "x": -3.182, "y": -32.308, "diameter": 4.5 }
+    ]
+  },
+  "N": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -3.785, "y": -32.44, "diameter": 4.5 },
+      { "x": -21.922, "y": -32.44, "diameter": 4.5 }
+    ]
+  },
+  "O": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.813, "y": -5.03, "diameter": 4.5 },
+      { "x": -12.851, "y": -60.24, "diameter": 4.5 }
+    ]
+  },
+  "P": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -11.66, "y": -60.084, "diameter": 4.5 },
+      { "x": -3.515, "y": -5.404, "diameter": 4.5 }
+    ]
+  },
+  "Q": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.851, "y": -5.049, "diameter": 4.5 },
+      { "x": -12.851, "y": -60.26, "diameter": 4.5 }
+    ]
+  },
+  "R": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -3.366, "y": -4.404, "diameter": 4.5 },
+      { "x": -11.332, "y": -60.299, "diameter": 4.5 }
+    ]
+  },
+  "S": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.889, "y": -4.854, "diameter": 4.5 },
+      { "x": -12.926, "y": -60.216, "diameter": 4.5 }
+    ]
+  },
+  "-": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -9.932, "y": -33.134, "diameter": 4.5 },
+      { "x": -16.677, "y": -33.193, "diameter": 4.5 }
+    ]
+  },
+  "T": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.817, "y": -5.404, "diameter": 4.5 },
+      { "x": -12.817, "y": -59.316, "diameter": 4.5 }
+    ]
+  },
+  "U": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -3.534, "y": -34.107, "diameter": 4.5 },
+      { "x": -21.922, "y": -34.119, "diameter": 4.5 }
+    ]
+  },
+  "V": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.482, "y": -8.232, "diameter": 4.5 },
+      { "x": -12.543, "y": -28, "diameter": 4.5 }
+    ]
+  },
+  "W": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -20.836, "y": -32.518, "diameter": 4.5 },
+      { "x": -4.852, "y": -32.518, "diameter": 4.5 }
+    ]
+  },
+  "X": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.677, "y": -44.575, "diameter": 4.5 },
+      { "x": -12.677, "y": -20.266, "diameter": 4.5 }
+    ]
+  },
+  "Y": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.662, "y": -5.306, "diameter": 4.5 },
+      { "x": -12.719, "y": -39.401, "diameter": 4.5 }
+    ]
+  },
+  "Z": {
+    "width": 25.4,
+    "height": 65.0875,
+    "pinCount": 2,
+    "pins": [
+      { "x": -12.657, "y": -5.702, "diameter": 4.5 },
+      { "x": -12.747, "y": -59.636, "diameter": 4.5 }
+    ]
+  }
 };
 
 export default function App() {
