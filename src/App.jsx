@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Settings, Printer, AlignCenter, AlignLeft, AlignRight, AlignJustify, Move, Database, Info, AlertTriangle, ArrowRightLeft, CheckCircle2, Scissors, Ruler, Type, ArrowLeftRight, ZoomIn, Maximize } from 'lucide-react';
+import { Settings, Printer, AlignCenter, AlignLeft, AlignRight, AlignJustify, Move, Database, Info, AlertTriangle, ArrowRightLeft, CheckCircle2, Scissors, Ruler, Type, ArrowLeftRight, ZoomIn, Maximize, RotateCcw } from 'lucide-react';
 
 // Standaard afmetingen (basis waarden in inches voor interne logica)
 const PRESETS = {
@@ -828,7 +828,19 @@ export default function App() {
             </>
           ) : (
             <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 h-full">
-              <h3 className="font-semibold mb-2 flex items-center gap-2 text-red-600"><Database size={18} /> JSON Data Input</h3>
+              <div className="flex justify-between items-center mb-2">
+                 <h3 className="font-semibold flex items-center gap-2 text-red-600"><Database size={18} /> JSON Data Input</h3>
+                 <button 
+                    onClick={() => {
+                        if(window.confirm("Weet je zeker dat je terug wilt naar de standaard data? Je wijzigingen gaan verloren.")) {
+                             setHoleDataInput(JSON.stringify(INITIAL_HOLE_DATA, null, 2));
+                        }
+                    }}
+                    className="text-xs bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded flex items-center gap-1 font-semibold"
+                 >
+                    <RotateCcw size={12} /> Herstel Standaard
+                 </button>
+              </div>
               <p className="text-xs text-gray-500 mb-4">Plak hier je geëxporteerde coördinaten. Formaat: Fusion360 Export (mm, negatieve coördinaten).</p>
               <textarea className={`w-full h-96 p-2 text-xs font-mono border rounded ${parseError ? 'border-red-500 bg-red-50' : 'border-gray-300'}`} value={holeDataInput} onChange={(e) => setHoleDataInput(e.target.value)} />
               {parseError && <div className="text-red-600 text-xs mt-2 font-bold">{parseError}</div>}
