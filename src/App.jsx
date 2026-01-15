@@ -26,15 +26,15 @@ const safeFloat = (val) => {
   return isNaN(num) ? 0 : num;
 };
 
-// Volledige dataset van de gebruiker (Nieuwe update met 2 pinnen per karakter)
+// Volledige dataset van de gebruiker (Schoongemaakt: Pins prefix weg, Streepje -> -)
 const INITIAL_HOLE_DATA = {
   "0": {
     "width": 25.4,
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -3.553, "y": -34.178, "diameter": 4.5 },
-      { "x": -22.014, "y": -34.022, "diameter": 4.5 }
+      { "x": 18.359, "y": -59.257, "diameter": 4.5 },
+      { "x": 6.347, "y": -6.414, "diameter": 4.5 }
     ]
   },
   "1": {
@@ -42,8 +42,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -13.572, "y": -58.53, "diameter": 4.5 },
-      { "x": -15.402, "y": -5.371, "diameter": 4.5 }
+      { "x": 12.7, "y": -5, "diameter": 4.5 },
+      { "x": 10.933, "y": -60.367, "diameter": 4.5 }
     ]
   },
   "2": {
@@ -51,8 +51,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.665, "y": -5.595, "diameter": 4.5 },
-      { "x": -12.747, "y": -59.597, "diameter": 4.5 }
+      { "x": 12.7, "y": -61.363, "diameter": 4.5 },
+      { "x": 12.7, "y": -3.466, "diameter": 4.5 }
     ]
   },
   "3": {
@@ -60,8 +60,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.986, "y": -5.324, "diameter": 4.5 },
-      { "x": -12.931, "y": -59.938, "diameter": 4.5 }
+      { "x": 13.916, "y": -55.94, "diameter": 4.5 },
+      { "x": 13.866, "y": -3.351, "diameter": 4.5 }
     ]
   },
   "4": {
@@ -69,8 +69,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -19.365, "y": -5.414, "diameter": 4.5 },
-      { "x": -15.978, "y": -52.929, "diameter": 4.5 }
+      { "x": 9.457, "y": -15.949, "diameter": 4.5 },
+      { "x": 18.547, "y": -60.361, "diameter": 4.5 }
     ]
   },
   "5": {
@@ -78,8 +78,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -13.159, "y": -5.232, "diameter": 4.5 },
-      { "x": -12.689, "y": -60.371, "diameter": 4.5 }
+      { "x": 12.833, "y": -61.592, "diameter": 4.5 },
+      { "x": 12.654, "y": -3.668, "diameter": 4.5 }
     ]
   },
   "6": {
@@ -87,8 +87,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -13.014, "y": -4.993, "diameter": 4.5 },
-      { "x": -12.577, "y": -60.24, "diameter": 4.5 }
+      { "x": 12.776, "y": -3.698, "diameter": 4.5 },
+      { "x": 14.868, "y": -58.705, "diameter": 4.5 }
     ]
   },
   "7": {
@@ -96,8 +96,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -9.639, "y": -5.43, "diameter": 4.5 },
-      { "x": -12.699, "y": -60.464, "diameter": 4.5 }
+      { "x": 11.463, "y": -4.879, "diameter": 4.5 },
+      { "x": 12.699, "y": -61.516, "diameter": 4.5 }
     ]
   },
   "8": {
@@ -105,8 +105,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -13.046, "y": -4.737, "diameter": 4.5 },
-      { "x": -13.046, "y": -60.123, "diameter": 4.5 }
+      { "x": 12.78, "y": -3.798, "diameter": 4.5 },
+      { "x": 12.7, "y": -61.344, "diameter": 4.5 }
     ]
   },
   "9": {
@@ -114,8 +114,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.881, "y": -4.921, "diameter": 4.5 },
-      { "x": -12.368, "y": -60.16, "diameter": 4.5 }
+      { "x": 10.533, "y": -6.41, "diameter": 4.5 },
+      { "x": 12.7, "y": -61.382, "diameter": 4.5 }
     ]
   },
   "A": {
@@ -123,8 +123,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.568, "y": -14.902, "diameter": 4.5 },
-      { "x": -12.473, "y": -55.788, "diameter": 4.5 }
+      { "x": 12.722, "y": -12.899, "diameter": 4.5 },
+      { "x": 12.694, "y": -52.184, "diameter": 4.5 }
     ]
   },
   "B": {
@@ -132,8 +132,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -10.853, "y": -59.733, "diameter": 4.5 },
-      { "x": -10.853, "y": -5.42, "diameter": 4.5 }
+      { "x": 11.286, "y": -3.806, "diameter": 4.5 },
+      { "x": 11.286, "y": -60.99, "diameter": 4.5 }
     ]
   },
   "C": {
@@ -141,8 +141,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.876, "y": -5.342, "diameter": 4.5 },
-      { "x": -12.876, "y": -59.733, "diameter": 4.5 }
+      { "x": 12.719, "y": -3.562, "diameter": 4.5 },
+      { "x": 12.573, "y": -61.554, "diameter": 4.5 }
     ]
   },
   "D": {
@@ -150,8 +150,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -11.787, "y": -59.655, "diameter": 4.5 },
-      { "x": -11.633, "y": -5.342, "diameter": 4.5 }
+      { "x": 9.371, "y": -61.573, "diameter": 4.5 },
+      { "x": 9.371, "y": -3.514, "diameter": 4.5 }
     ]
   },
   "E": {
@@ -159,8 +159,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.641, "y": -5.361, "diameter": 4.5 },
-      { "x": -12.716, "y": -59.967, "diameter": 4.5 }
+      { "x": 12.7, "y": -3.554, "diameter": 4.5 },
+      { "x": 12.7, "y": -61.572, "diameter": 4.5 }
     ]
   },
   "F": {
@@ -168,8 +168,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -3.646, "y": -6.443, "diameter": 4.5 },
-      { "x": -12.539, "y": -59.967, "diameter": 4.5 }
+      { "x": 3.322, "y": -5, "diameter": 4.5 },
+      { "x": 12.7, "y": -61.601, "diameter": 4.5 }
     ]
   },
   "G": {
@@ -177,8 +177,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.108, "y": -5.098, "diameter": 4.5 },
-      { "x": -12.07, "y": -60.259, "diameter": 4.5 }
+      { "x": 12.871, "y": -3.572, "diameter": 4.5 },
+      { "x": 12.731, "y": -61.286, "diameter": 4.5 }
     ]
   },
   "H": {
@@ -186,8 +186,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -21.195, "y": -33.477, "diameter": 4.5 },
-      { "x": -4.008, "y": -33.477, "diameter": 4.5 }
+      { "x": 22.164, "y": -32.559, "diameter": 4.5 },
+      { "x": 3.143, "y": -32.559, "diameter": 4.5 }
     ]
   },
   "I": {
@@ -195,8 +195,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.654, "y": -5.465, "diameter": 4.5 },
-      { "x": -12.468, "y": -59.223, "diameter": 4.5 }
+      { "x": 12.66, "y": -61.513, "diameter": 4.5 },
+      { "x": 12.66, "y": -3.574, "diameter": 4.5 }
     ]
   },
   "J": {
@@ -204,8 +204,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -13.216, "y": -5.198, "diameter": 4.5 },
-      { "x": -21.901, "y": -59.463, "diameter": 4.5 }
+      { "x": 13.947, "y": -3.263, "diameter": 4.5 },
+      { "x": 24.311, "y": -54.266, "diameter": 4.5 }
     ]
   },
   "K": {
@@ -213,8 +213,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -20.612, "y": -5.396, "diameter": 4.5 },
-      { "x": -3.501, "y": -59.424, "diameter": 4.5 }
+      { "x": 21.019, "y": -4.89, "diameter": 4.5 },
+      { "x": 3.177, "y": -60.089, "diameter": 4.5 }
     ]
   },
   "L": {
@@ -222,8 +222,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.678, "y": -5.59, "diameter": 4.5 },
-      { "x": -3.572, "y": -59.593, "diameter": 4.5 }
+      { "x": 16.306, "y": -3.51, "diameter": 4.5 },
+      { "x": 3.266, "y": -60.089, "diameter": 4.5 }
     ]
   },
   "M": {
@@ -231,8 +231,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -21.893, "y": -32.308, "diameter": 4.5 },
-      { "x": -3.182, "y": -32.308, "diameter": 4.5 }
+      { "x": 22.182, "y": -32.544, "diameter": 4.5 },
+      { "x": 3.218, "y": -32.544, "diameter": 4.5 }
     ]
   },
   "N": {
@@ -240,8 +240,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -3.785, "y": -32.44, "diameter": 4.5 },
-      { "x": -21.922, "y": -32.44, "diameter": 4.5 }
+      { "x": 21.259, "y": -4.924, "diameter": 4.5 },
+      { "x": 4.128, "y": -60.162, "diameter": 4.5 }
     ]
   },
   "O": {
@@ -249,8 +249,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.813, "y": -5.03, "diameter": 4.5 },
-      { "x": -12.851, "y": -60.24, "diameter": 4.5 }
+      { "x": 12.938, "y": -3.403, "diameter": 4.5 },
+      { "x": 12.967, "y": -61.419, "diameter": 4.5 }
     ]
   },
   "P": {
@@ -258,8 +258,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -11.66, "y": -60.084, "diameter": 4.5 },
-      { "x": -3.515, "y": -5.404, "diameter": 4.5 }
+      { "x": 9.689, "y": -61.564, "diameter": 4.5 },
+      { "x": 3.207, "y": -5, "diameter": 4.5 }
     ]
   },
   "Q": {
@@ -267,8 +267,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.851, "y": -5.049, "diameter": 4.5 },
-      { "x": -12.851, "y": -60.26, "diameter": 4.5 }
+      { "x": 12, "y": -3.659, "diameter": 4.5 },
+      { "x": 12.674, "y": -61.455, "diameter": 4.5 }
     ]
   },
   "R": {
@@ -276,8 +276,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -3.366, "y": -4.404, "diameter": 4.5 },
-      { "x": -11.332, "y": -60.299, "diameter": 4.5 }
+      { "x": 9.562, "y": -61.611, "diameter": 4.5 },
+      { "x": 3.173, "y": -5, "diameter": 4.5 }
     ]
   },
   "S": {
@@ -285,8 +285,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.889, "y": -4.854, "diameter": 4.5 },
-      { "x": -12.926, "y": -60.216, "diameter": 4.5 }
+      { "x": 12.746, "y": -3.643, "diameter": 4.5 },
+      { "x": 12.765, "y": -61.572, "diameter": 4.5 }
     ]
   },
   "-": {
@@ -294,8 +294,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -9.932, "y": -33.134, "diameter": 4.5 },
-      { "x": -16.677, "y": -33.193, "diameter": 4.5 }
+      { "x": 17.29, "y": -32.544, "diameter": 4.5 },
+      { "x": 8.11, "y": -32.544, "diameter": 4.5 }
     ]
   },
   "T": {
@@ -303,8 +303,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.817, "y": -5.404, "diameter": 4.5 },
-      { "x": -12.817, "y": -59.316, "diameter": 4.5 }
+      { "x": 12.642, "y": -5, "diameter": 4.5 },
+      { "x": 12.7, "y": -61.452, "diameter": 4.5 }
     ]
   },
   "U": {
@@ -312,8 +312,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -3.534, "y": -34.107, "diameter": 4.5 },
-      { "x": -21.922, "y": -34.119, "diameter": 4.5 }
+      { "x": 3.2, "y": -39.579, "diameter": 4.5 },
+      { "x": 22.201, "y": -39.579, "diameter": 4.5 }
     ]
   },
   "V": {
@@ -321,8 +321,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.482, "y": -8.232, "diameter": 4.5 },
-      { "x": -12.543, "y": -28, "diameter": 4.5 }
+      { "x": 17.994, "y": -32.544, "diameter": 4.5 },
+      { "x": 7.424, "y": -32.544, "diameter": 4.5 }
     ]
   },
   "W": {
@@ -330,8 +330,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -20.836, "y": -32.518, "diameter": 4.5 },
-      { "x": -4.852, "y": -32.518, "diameter": 4.5 }
+      { "x": 20.595, "y": -32.544, "diameter": 4.5 },
+      { "x": 4.513, "y": -32.544, "diameter": 4.5 }
     ]
   },
   "X": {
@@ -339,8 +339,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.677, "y": -44.575, "diameter": 4.5 },
-      { "x": -12.677, "y": -20.266, "diameter": 4.5 }
+      { "x": 12.737, "y": -21.771, "diameter": 4.5 },
+      { "x": 12.66, "y": -43.169, "diameter": 4.5 }
     ]
   },
   "Y": {
@@ -348,8 +348,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.662, "y": -5.306, "diameter": 4.5 },
-      { "x": -12.719, "y": -39.401, "diameter": 4.5 }
+      { "x": 12.744, "y": -40.054, "diameter": 4.5 },
+      { "x": 12.796, "y": -5, "diameter": 4.5 }
     ]
   },
   "Z": {
@@ -357,8 +357,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": -12.657, "y": -5.702, "diameter": 4.5 },
-      { "x": -12.747, "y": -59.636, "diameter": 4.5 }
+      { "x": 13.124, "y": -3.585, "diameter": 4.5 },
+      { "x": 13.124, "y": -61.644, "diameter": 4.5 }
     ]
   }
 };
