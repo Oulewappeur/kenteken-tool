@@ -718,7 +718,15 @@ export default function App() {
                             value={charLimit} 
                             onChange={(e) => {
                               const val = e.target.value;
-                              setCharLimit(val === '' ? '' : parseInt(val));
+                              const newLimit = val === '' ? '' : parseInt(val);
+                              setCharLimit(newLimit);
+
+                              // Automatisch spacing aanpassen op basis van aantal karakters
+                              if (typeof newLimit === 'number') {
+                                const defaultSpacingInch = newLimit >= 9 ? 0.25 : 0.375;
+                                const newSpacing = unit === 'mm' ? round(defaultSpacingInch * 25.4) : defaultSpacingInch;
+                                setSpacing(newSpacing);
+                              }
                             }}
                             className="w-full border rounded p-2 text-sm"
                         />
