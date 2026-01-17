@@ -204,8 +204,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": 12,66, "y": -3,586, "diameter": 4.5 },
-      { "x": 22,137, "y": -60,09, "diameter": 4.5 }
+      { "x": 12.66, "y": -3.586, "diameter": 4.5 },
+      { "x": 22.137, "y": -60.09, "diameter": 4.5 }
     ]
   },
   "K": {
