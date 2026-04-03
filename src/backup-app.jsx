@@ -60,8 +60,8 @@ const INITIAL_HOLE_DATA = {
     "height": 65.0875,
     "pinCount": 2,
     "pins": [
-      { "x": 13.916, "y": -55.94, "diameter": 4.5 },
-      { "x": 13.866, "y": -3.351, "diameter": 4.5 }
+      { "x": 12.7, "y": -61.312, "diameter": 4.5 },
+      { "x": 12.487, "y": -3.688, "diameter": 4.5 }
     ]
   },
   "4": {
@@ -366,9 +366,9 @@ const INITIAL_HOLE_DATA = {
 export default function App() {
   const [text, setText] = useState("DASLOODS");
   const [unit, setUnit] = useState("mm"); 
-  const [plateType, setPlateType] = useState("CUSTOM"); 
-  const [plateWidth, setPlateWidth] = useState(300);
-  const [plateHeight, setPlateHeight] = useState(150);
+  const [plateType, setPlateType] = useState("US"); 
+  const [plateWidth, setPlateWidth] = useState(round(PRESETS.US.width * 25.4));
+  const [plateHeight, setPlateHeight] = useState(round(PRESETS.US.height * 25.4));
   
   const [charLimit, setCharLimit] = useState(8); 
   const [spacing, setSpacing] = useState(round(0.375 * 25.4)); // Default spacing 9.525mm
@@ -384,7 +384,7 @@ export default function App() {
   const [parseError, setParseError] = useState(null);
   const [activeTab, setActiveTab] = useState('settings');
   
-  const [useTiling, setUseTiling] = useState(true);
+  const [useTiling, setUseTiling] = useState(false);
   const [printSection, setPrintSection] = useState('all');
 
   const [printMarginTop, setPrintMarginTop] = useState(0);
@@ -998,4 +998,4 @@ export default function App() {
       `}</style>
     </div>
   );
-}
+}g

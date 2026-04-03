@@ -1,2 +1,9 @@
+LOKAAL
 cd kenteken-tool
 npm run dev
+
+GITHUB
+git add .
+git commit -m "Update alle karakters met nieuwe DXF data"
+git push
+npm run deploy
